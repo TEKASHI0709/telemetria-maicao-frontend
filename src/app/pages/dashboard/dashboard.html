@@ -1,0 +1,79 @@
+<div class="dashboard">
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-number">{{ totalTanks }}</div>
+      <div class="stat-label">Tanques</div>
+    </div>
+    <div class="stat-card success">
+      <div class="stat-number">{{ onlineTanks }}</div>
+      <div class="stat-label">En línea</div>
+    </div>
+    <div class="stat-card danger">
+      <div class="stat-number">{{ activeAlerts }}</div>
+      <div class="stat-label">Alertas</div>
+    </div>
+  </div>
+
+  <div class="summary-card">
+    <div class="summary-circle">
+      <div class="circle-progress" [style.--progress]="averageLevel">
+        <span class="circle-text">{{ averageLevel }}%</span>
+      </div>
+      <p class="circle-label">Promedio</p>
+    </div>
+    <div class="summary-info">
+      <h3>Nivel Promedio</h3>
+      <div class="info-row">
+        <span class="info-label">Consumo diario</span>
+        <span class="info-value">{{ dailyConsumption }}L</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Eficiencia</span>
+        <span class="info-value efficiency">{{ efficiency }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Próx. llenado</span>
+        <span class="info-value">{{ nextFill }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tanks-section">
+    <div class="section-header">
+      <h3>Mis Tanques</h3>
+      <button class="add-btn" (click)="addTank()">+ Agregar</button>
+    </div>
+
+    <div class="tank-card" *ngFor="let tank of tanks">
+      <div class="tank-info">
+        <div class="tank-icon" [class.full]="tank.level >= 90" [class.normal]="tank.level >= 40 && tank.level < 90" [class.low]="tank.level < 40"></div>
+        <div class="tank-details">
+          <div class="tank-name-row">
+            <h4>{{ tank.name }}</h4>
+            <span class="tank-status" [class.full]="tank.level >= 90" [class.normal]="tank.level >= 40 && tank.level < 90" [class.low]="tank.level < 40">
+              {{ tank.statusLabel }}
+            </span>
+          </div>
+          <p class="tank-location">{{ tank.location }} · {{ tank.capacity_liters }}L</p>
+          <div class="progress-container">
+            <div class="progress-bar">
+              <div class="progress-fill" [class.full]="tank.level >= 90" [class.normal]="tank.level >= 40 && tank.level < 90" [class.low]="tank.level < 40" [style.width.%]="tank.level"></div>
+            </div>
+            <span class="progress-percent">{{ tank.level }}%</span>
+          </div>
+          <p class="tank-volume">{{ tank.currentVolume }}L / {{ tank.capacity_liters }}L</p>
+        </div>
+      </div>
+      <div class="tank-actions">
+        <button class="action-btn fill">▲ Llenar</button>
+        <button class="action-btn consume">▼ Consumir</button>
+        <button class="action-btn delete">🗑️</button>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="tanks.length === 0">
+      <p>No tienes tanques registrados</p>
+      <button class="add-btn-large" (click)="addTank()">+ Agregar tu primer tanque</button>
+    </div>
+  </div>
+</div>
