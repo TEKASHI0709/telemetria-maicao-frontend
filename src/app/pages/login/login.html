@@ -1,24 +1,117 @@
 <div class="login-container">
+  <!-- Fondo animado con ondas -->
+  <div class="bg-animation">
+    <div class="wave wave1"></div>
+    <div class="wave wave2"></div>
+    <div class="wave wave3"></div>
+  </div>
+
+  <!-- Partículas flotantes -->
+  <div class="particles">
+    <div class="particle" *ngFor="let p of particles"></div>
+  </div>
+
+  <!-- Grid futurista de fondo -->
+  <div class="grid-overlay"></div>
+
+  <!-- Card principal -->
   <div class="login-card">
-    <h1>Telemetría Maicao</h1>
-    <p class="subtitle">Sistema de Monitoreo de Niveles de Agua</p>
-    
-    <form (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label>Usuario</label>
-        <input type="text" [(ngModel)]="username" name="username" required>
+    <div class="card-glow"></div>
+
+    <div class="logo-section">
+      <div class="logo-icon">
+        <svg viewBox="0 0 100 100" class="water-icon">
+          <defs>
+            <linearGradient id="waterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#06b6d4" />
+              <stop offset="100%" stop-color="#3b82f6" />
+            </linearGradient>
+          </defs>
+          <path d="M50 10 C30 35, 20 55, 20 70 C20 85, 33 95, 50 95 C67 95, 80 85, 80 70 C80 55, 70 35, 50 10 Z"
+            fill="url(#waterGrad)" class="drop-shape" />
+          <ellipse cx="40" cy="65" rx="8" ry="5" fill="rgba(255,255,255,0.4)" class="drop-highlight" />
+        </svg>
       </div>
-      
-      <div class="form-group">
-        <label>Contraseña</label>
-        <input type="password" [(ngModel)]="password" name="password" required>
+      <div class="signal-bars">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
       </div>
-      
-      <button type="submit" [disabled]="loading">
-        {{ loading ? 'Ingresando...' : 'Iniciar Sesión' }}
+    </div>
+
+    <div class="title-section">
+      <h1 class="main-title">Telemetría Maicao</h1>
+      <p class="subtitle">Sistema IoT de Monitoreo Hídrico</p>
+      <div class="badge-row">
+        <span class="badge">ESP32</span>
+        <span class="badge">MQTT</span>
+        <span class="badge">Real-time</span>
+      </div>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-group">
+        <label>
+          <span class="label-icon">👤</span>
+          Usuario
+        </label>
+        <div class="input-wrapper">
+          <input type="text" [(ngModel)]="username" name="username" placeholder="admin" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <span class="label-icon">🔐</span>
+          Contraseña
+        </label>
+        <div class="input-wrapper">
+          <input type="password" [(ngModel)]="password" name="password" placeholder="••••••••" required>
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="loading" class="login-btn">
+        <span *ngIf="!loading" class="btn-content">
+          <span class="btn-text">Acceder al Sistema</span>
+          <span class="btn-arrow">→</span>
+        </span>
+        <span *ngIf="loading" class="btn-loading">
+          <span class="loading-dot"></span>
+          <span class="loading-dot"></span>
+          <span class="loading-dot"></span>
+        </span>
       </button>
-      
-      <p class="error" *ngIf="error">{{ error }}</p>
+
+      <p class="error" *ngIf="error">⚠ {{ error }}</p>
     </form>
+
+    <div class="footer-info">
+      <div class="status-dot"></div>
+      <span>Sistema en línea · Maicao, La Guajira</span>
+    </div>
+  </div>
+  <!-- Pantalla de éxito al iniciar sesión -->
+  <div class="success-overlay" *ngIf="loginSuccess">
+    <div class="success-content">
+      <div class="success-drop">
+        <svg viewBox="0 0 100 100" class="drop-svg">
+          <defs>
+            <linearGradient id="successGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#06b6d4" />
+              <stop offset="100%" stop-color="#3b82f6" />
+            </linearGradient>
+          </defs>
+          <path d="M50 10 C30 35, 20 55, 20 70 C20 85, 33 95, 50 95 C67 95, 80 85, 80 70 C80 55, 70 35, 50 10 Z"
+            fill="url(#successGrad)" class="success-drop-shape" />
+          <path d="M35 65 L45 75 L65 55" stroke="white" stroke-width="5" fill="none" stroke-linecap="round"
+            stroke-linejoin="round" class="success-check" />
+        </svg>
+      </div>
+      <h2 class="success-message">¡Acceso concedido!</h2>
+      <p class="success-submessage">Cargando tu sistema...</p>
+      <div class="success-loader">
+        <div class="loader-bar"></div>
+      </div>
+    </div>
   </div>
 </div>

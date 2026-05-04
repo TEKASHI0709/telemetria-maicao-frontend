@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TankService, Tank } from '../../core/services/tank';
-import { ReadingService, Reading } from '../../core/services/reading';
+import { ReadingService } from '../../core/services/reading';
 import { AlertService } from '../../core/services/alert';
 import { forkJoin } from 'rxjs';
 
@@ -49,18 +49,18 @@ export class Dashboard implements OnInit {
     }).subscribe({
       next: ({ tanks, readings }) => {
         this.totalTanks = tanks.length;
-        
+
         this.tanks = tanks.map(tank => {
           const tankReadings = readings.filter(r => r.tank === tank.id);
-          const latest = tankReadings.length > 0 
-            ? tankReadings.sort((a, b) => 
+          const latest = tankReadings.length > 0
+            ? tankReadings.sort((a, b) =>
                 new Date(b.timestamp || 0).getTime() - new Date(a.timestamp || 0).getTime()
               )[0]
             : null;
-          
+
           const hasData = latest !== null;
           const level = hasData ? Math.round(latest!.level_percent) : 0;
-          
+
           return {
             ...tank,
             level,
@@ -69,9 +69,9 @@ export class Dashboard implements OnInit {
             hasData
           };
         });
-        
+
         this.onlineTanks = this.tanks.filter(t => t.hasData).length;
-        
+
         const tanksWithData = this.tanks.filter(t => t.hasData);
         if (tanksWithData.length > 0) {
           const sum = tanksWithData.reduce((acc, t) => acc + t.level, 0);
@@ -81,7 +81,7 @@ export class Dashboard implements OnInit {
           this.averageLevel = 0;
           this.efficiency = 'Sin datos';
         }
-        
+
         this.cdr.detectChanges();
       },
       error: (err) => {
