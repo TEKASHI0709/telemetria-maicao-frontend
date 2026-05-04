@@ -1,0 +1,74 @@
+<div class="ia-page">
+  <div class="ia-header">
+    <h2 class="page-title">Asistente IA</h2>
+    <p class="page-subtitle">Predicciones inteligentes de consumo</p>
+  </div>
+
+  <div class="analysis-card">
+    <div class="analysis-icon">⚡</div>
+    <div class="analysis-info">
+      <h3>Análisis Inteligente</h3>
+      <p>Actualizado ahora</p>
+    </div>
+  </div>
+
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-value">{{ healthScore }}</div>
+      <div class="metric-label">Score</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">{{ autonomy }}h</div>
+      <div class="metric-label">Autonomía</div>
+    </div>
+    <div class="metric-card success">
+      <div class="metric-value">{{ urgencyStatus }}</div>
+      <div class="metric-label">{{ urgencyLabel }}</div>
+    </div>
+  </div>
+
+  <div class="prediction-card">
+    <div class="prediction-icon">💡</div>
+    <div class="prediction-content">
+      <h4>Predicción de Consumo</h4>
+      <p>{{ consumptionPrediction }}</p>
+    </div>
+  </div>
+
+  <div class="prediction-card">
+    <div class="prediction-icon">🕒</div>
+    <div class="prediction-content">
+      <h4>Mejor Hora para Llenar</h4>
+      <p>La IA recomienda llenar entre las 5:00 AM y 7:00 AM cuando la demanda es baja y las tarifas son menores.</p>
+    </div>
+  </div>
+
+  <div class="prediction-card">
+    <div class="prediction-icon">📈</div>
+    <div class="prediction-content">
+      <h4>Patrón Semanal</h4>
+      <p>Los fines de semana el consumo aumenta ~30%. Se sugiere llenar tanques al 100% los viernes por la noche.</p>
+    </div>
+  </div>
+
+  <div class="recommendations-section">
+    <h3 class="section-title">Recomendaciones por Tanque</h3>
+
+    <div class="recommendation-card" *ngFor="let tank of tanks">
+      <div class="recommendation-header">
+        <span class="tank-name">{{ tank.name }}</span>
+        <span class="tank-percent">({{ tank.level }}%)</span>
+      </div>
+      <p class="recommendation-text" [class.full]="tank.level >= 90" [class.normal]="tank.level >= 40 && tank.level < 90" [class.low]="tank.level < 40">
+        <span class="rec-icon" *ngIf="tank.level >= 90">💧</span>
+        <span class="rec-icon" *ngIf="tank.level >= 40 && tank.level < 90">⚠️</span>
+        <span class="rec-icon" *ngIf="tank.level < 40">🔴</span>
+        {{ getRecommendation(tank.level) }}
+      </p>
+    </div>
+
+    <div class="empty-state" *ngIf="tanks.length === 0">
+      <p>No hay tanques registrados</p>
+    </div>
+  </div>
+</div>

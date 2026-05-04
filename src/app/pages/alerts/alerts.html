@@ -1,1 +1,33 @@
-<p>alerts works!</p>
+<div class="alerts-page">
+  <h2 class="page-title">Centro de Alertas</h2>
+
+  <div class="alerts-list" *ngIf="alerts.length > 0">
+    <div class="alert-card" *ngFor="let alert of alerts" [class.read]="alert.is_read">
+      <div class="alert-icon" [class.success]="alert.alert_type === 'OVERFLOW'" [class.warning]="alert.alert_type === 'LOW'" [class.danger]="alert.alert_type === 'CRITICAL'">
+        <span *ngIf="alert.alert_type === 'OVERFLOW'">✓</span>
+        <span *ngIf="alert.alert_type === 'LOW'">⚠</span>
+        <span *ngIf="alert.alert_type === 'CRITICAL'">⚠</span>
+      </div>
+      <div class="alert-content">
+        <div class="alert-header">
+          <h4>{{ getTankName(alert.tank) }}</h4>
+          <span class="alert-time">{{ formatTime(alert.created_at) }}</span>
+        </div>
+        <p class="alert-message">{{ alert.message }}</p>
+      </div>
+      <button class="mark-btn" *ngIf="!alert.is_read" (click)="markAsRead(alert)" title="Marcar como leída">
+        ✓
+      </button>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="alerts.length === 0 && !loading">
+    <div class="empty-icon">🔔</div>
+    <h3>No hay alertas</h3>
+    <p>Las alertas aparecerán aquí cuando los tanques superen los umbrales</p>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">
+    <p>Cargando alertas...</p>
+  </div>
+</div>

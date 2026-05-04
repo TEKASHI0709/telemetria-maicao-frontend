@@ -1,0 +1,74 @@
+<div class="stats-page">
+  <h2 class="page-title">Estadísticas</h2>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Agua Total</div>
+      <div class="stat-value">{{ totalWater }}L</div>
+      <div class="stat-sub">de {{ totalCapacity }}L</div>
+    </div>
+
+    <div class="stat-card large">
+      <div class="stat-label">Nivel Promedio</div>
+      <div class="stat-value">{{ averageLevel }}%</div>
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="averageLevel"></div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Tanques Llenos</div>
+      <div class="stat-value success">{{ fullTanks }}</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Nivel Bajo</div>
+      <div class="stat-value danger">{{ lowTanks }}</div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <h3 class="chart-title">Consumo Semanal</h3>
+    <div class="chart-container">
+      <div class="chart-bar" *ngFor="let day of weeklyConsumption">
+        <div class="bar" [style.height.%]="day.percent">
+          <span class="bar-value">{{ day.value }}L</span>
+        </div>
+        <span class="bar-label">{{ day.label }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-grid bottom-grid">
+    <div class="stat-card">
+      <div class="stat-label">Llenados Totales</div>
+      <div class="stat-value">{{ totalFills }}</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Consumo Diario Est.</div>
+      <div class="stat-value">{{ dailyEstimate }}L</div>
+    </div>
+  </div>
+
+  <div class="detail-section">
+    <h3 class="section-title">Detalle por Tanque</h3>
+    
+    <div class="tank-detail-card" *ngFor="let tank of tanks">
+      <div class="tank-detail-circle" [class.full]="tank.level >= 90" [class.normal]="tank.level >= 40 && tank.level < 90" [class.low]="tank.level < 40">
+        <span>{{ tank.level }}%</span>
+      </div>
+      <div class="tank-detail-info">
+        <h4>{{ tank.name }}</h4>
+        <p>{{ tank.location }} · {{ tank.capacity_liters }}L</p>
+      </div>
+      <span class="tank-detail-status" [class.full]="tank.level >= 90" [class.normal]="tank.level >= 40 && tank.level < 90" [class.low]="tank.level < 40">
+        {{ tank.statusLabel }}
+      </span>
+    </div>
+
+    <div class="empty-state" *ngIf="tanks.length === 0">
+      <p>No hay tanques registrados</p>
+    </div>
+  </div>
+</div>

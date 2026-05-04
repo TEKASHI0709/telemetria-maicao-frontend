@@ -5,6 +5,8 @@ import { Dashboard } from './pages/dashboard/dashboard';
 import { Tanks } from './pages/tanks/tanks';
 import { Readings } from './pages/readings/readings';
 import { Alerts } from './pages/alerts/alerts';
+import { Stats } from './pages/stats/stats';
+import { Ia } from './pages/ia/ia';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -17,8 +19,8 @@ export const routes: Routes = [
       { path: 'tanks', component: Tanks },
       { path: 'readings', component: Readings },
       { path: 'alerts', component: Alerts },
-      { path: 'stats', component: Readings },
-      { path: 'ia', component: Dashboard },
+      { path: 'stats', component: Stats },
+      { path: 'ia', component: Ia },
       { path: 'add-tank', component: Tanks }
     ]
   }
