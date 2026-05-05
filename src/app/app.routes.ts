@@ -9,6 +9,8 @@ import { Alerts } from './pages/alerts/alerts';
 import { Stats } from './pages/stats/stats';
 import { Ia } from './pages/ia/ia';
 import { UsersAdmin } from './pages/users-admin/users-admin';
+import { DevicesAdmin } from './pages/devices-admin/devices-admin';
+import { SystemLogs } from './pages/system-logs/system-logs';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -25,6 +27,8 @@ export const routes: Routes = [
       { path: 'stats', component: Stats },
       { path: 'ia', component: Ia },
       { path: 'users-admin', component: UsersAdmin },
+      { path: 'devices-admin', component: DevicesAdmin },
+      { path: 'system-logs', component: SystemLogs },
       { path: 'add-tank', component: Tanks }
     ]
   }

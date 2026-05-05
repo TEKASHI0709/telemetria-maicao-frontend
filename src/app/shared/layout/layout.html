@@ -84,13 +84,13 @@
       <span class="nav-icon">👥</span>
       <span class="nav-label">Usuarios</span>
     </button>
-    <button class="nav-item" [class.active]="activeTab === 'alertas'" (click)="navigate('alerts', 'alertas')">
-      <span class="nav-icon">🔔</span>
-      <span class="nav-label">Alertas</span>
+    <button class="nav-item" [class.active]="activeTab === 'dispositivos'" (click)="navigate('devices-admin', 'dispositivos')">
+      <span class="nav-icon">📡</span>
+      <span class="nav-label">Dispositivos</span>
     </button>
-    <button class="nav-item" [class.active]="activeTab === 'stats'" (click)="navigate('stats', 'stats')">
-      <span class="nav-icon">📊</span>
-      <span class="nav-label">Stats</span>
+    <button class="nav-item" [class.active]="activeTab === 'logs'" (click)="navigate('system-logs', 'logs')">
+      <span class="nav-icon">📋</span>
+      <span class="nav-label">Logs</span>
     </button>
   </nav>
 </div>

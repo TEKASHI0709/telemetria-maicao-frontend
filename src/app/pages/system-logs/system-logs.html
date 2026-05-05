@@ -1,0 +1,61 @@
+<div class="logs-page">
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">📋 Logs del Sistema</h2>
+      <p class="page-subtitle">Registro de eventos y actividad administrativa</p>
+    </div>
+    <button class="refresh-btn" (click)="loadLogs()">
+      🔄 Actualizar
+    </button>
+  </div>
+
+  <div class="filter-bar">
+    <button class="filter-btn" [class.active]="filterLevel === 'ALL'" (click)="setFilter('ALL')">
+      Todos ({{ logs.length }})
+    </button>
+    <button class="filter-btn success" [class.active]="filterLevel === 'SUCCESS'" (click)="setFilter('SUCCESS')">
+      ✓ Éxito ({{ countByLevel('SUCCESS') }})
+    </button>
+    <button class="filter-btn info" [class.active]="filterLevel === 'INFO'" (click)="setFilter('INFO')">
+      ℹ️ Info ({{ countByLevel('INFO') }})
+    </button>
+    <button class="filter-btn warning" [class.active]="filterLevel === 'WARNING'" (click)="setFilter('WARNING')">
+      ⚠️ Avisos ({{ countByLevel('WARNING') }})
+    </button>
+    <button class="filter-btn error" [class.active]="filterLevel === 'ERROR'" (click)="setFilter('ERROR')">
+      ⛔ Errores ({{ countByLevel('ERROR') }})
+    </button>
+  </div>
+
+  <div class="logs-list">
+    <div class="log-card" *ngFor="let log of filteredLogs" [class]="log.level.toLowerCase()">
+      <div class="log-icon-wrapper" [class]="log.level.toLowerCase()">
+        <span *ngIf="log.level === 'SUCCESS'">✓</span>
+        <span *ngIf="log.level === 'INFO'">ℹ</span>
+        <span *ngIf="log.level === 'WARNING'">⚠</span>
+        <span *ngIf="log.level === 'ERROR'">⛔</span>
+      </div>
+      <div class="log-content">
+        <div class="log-header">
+          <span class="log-type">{{ log.log_type_display }}</span>
+          <span class="log-time">{{ formatTime(log.created_at) }}</span>
+        </div>
+        <p class="log-message">{{ log.message }}</p>
+        <div class="log-meta" *ngIf="log.user_username">
+          <span class="meta-tag">👤 {{ log.user_username }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="filteredLogs.length === 0 && !loading">
+      <div class="empty-icon">📋</div>
+      <h3>No hay registros</h3>
+      <p *ngIf="filterLevel === 'ALL'">Aún no hay eventos registrados en el sistema</p>
+      <p *ngIf="filterLevel !== 'ALL'">No hay logs de tipo {{ filterLevel }}</p>
+    </div>
+
+    <div class="loading-state" *ngIf="loading">
+      <p>Cargando logs...</p>
+    </div>
+  </div>
+</div>

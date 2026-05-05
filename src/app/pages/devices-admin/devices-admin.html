@@ -1,0 +1,85 @@
+<div class="devices-page">
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">📡 Estado de Dispositivos</h2>
+      <p class="page-subtitle">Monitoreo de los sensores ESP32 conectados</p>
+    </div>
+    <button class="refresh-btn" (click)="loadDevices()">
+      🔄 Actualizar
+    </button>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-mini online">
+      <div class="stat-mini-icon">🟢</div>
+      <div>
+        <div class="stat-mini-value">{{ onlineCount }}</div>
+        <div class="stat-mini-label">En línea</div>
+      </div>
+    </div>
+    <div class="stat-mini warning">
+      <div class="stat-mini-icon">🟡</div>
+      <div>
+        <div class="stat-mini-value">{{ inactiveCount }}</div>
+        <div class="stat-mini-label">Inactivos</div>
+      </div>
+    </div>
+    <div class="stat-mini offline">
+      <div class="stat-mini-icon">🔴</div>
+      <div>
+        <div class="stat-mini-value">{{ offlineCount }}</div>
+        <div class="stat-mini-label">Sin datos</div>
+      </div>
+    </div>
+    <div class="stat-mini total">
+      <div class="stat-mini-icon">📊</div>
+      <div>
+        <div class="stat-mini-value">{{ devices.length }}</div>
+        <div class="stat-mini-label">Total</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="devices-list">
+    <div class="device-card" *ngFor="let device of devices" [class.online]="device.status === 'ONLINE'" [class.warning]="device.status === 'INACTIVE'" [class.offline]="device.status === 'OFFLINE'">
+      <div class="device-status-indicator">
+        <span class="status-dot" [class]="device.status.toLowerCase()"></span>
+      </div>
+      <div class="device-icon">📡</div>
+      <div class="device-info">
+        <div class="device-header">
+          <h4>{{ device.name }}</h4>
+          <span class="status-badge" [class]="device.status.toLowerCase()">
+            {{ device.statusLabel }}
+          </span>
+        </div>
+        <p class="device-owner">👤 {{ device.owner_username || 'Sin asignar' }}</p>
+        <p class="device-location">📍 {{ device.location }}</p>
+        <div class="device-meta">
+          <div class="meta-item">
+            <span class="meta-label">Última lectura:</span>
+            <span class="meta-value">{{ device.lastReading || 'Nunca' }}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Lecturas totales:</span>
+            <span class="meta-value">{{ device.readingCount }}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Capacidad:</span>
+            <span class="meta-value">{{ device.capacity_liters }}L</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="devices.length === 0 && !loading">
+      <div class="empty-icon">📡</div>
+      <h3>No hay dispositivos registrados</h3>
+      <p>Cuando los usuarios agreguen tanques con ESP32, aparecerán aquí</p>
+    </div>
+
+    <div class="loading-state" *ngIf="loading">
+      <p>Cargando dispositivos...</p>
+    </div>
+  </div>
+</div>
