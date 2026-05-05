@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "http-server dist/frontend/browser -p $PORT -c-1",
     "build": "ng build",
+    "dev": "ng serve",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
