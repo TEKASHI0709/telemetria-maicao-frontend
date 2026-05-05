@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { ImpersonationService } from './impersonation';
 
 export interface Tank {
   id?: number;
@@ -10,6 +11,8 @@ export interface Tank {
   capacity_liters: number;
   height_cm: number;
   created_at?: string;
+  owner?: number;
+  owner_username?: string;
 }
 
 @Injectable({
@@ -18,18 +21,46 @@ export interface Tank {
 export class TankService {
   private apiUrl = `${environment.apiUrl}/tanks/tanks/`;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private impersonationService: ImpersonationService
+  ) {}
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('access_token');
-    return new HttpHeaders({
+    let headers: any = {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
-    });
+    };
+    
+    const impersonated = this.impersonationService.getImpersonatedUser();
+    if (impersonated) {
+      headers['X-Impersonate-User'] = impersonated.id.toString();
+    }
+    
+    return new HttpHeaders(headers);
   }
 
   getAll(): Observable<Tank[]> {
     return this.http.get<Tank[]>(this.apiUrl, { headers: this.getHeaders() });
+  }
+
+  getForCurrentView(): Observable<Tank[]> {
+    return new Observable(observer => {
+      this.getAll().subscribe({
+        next: (tanks) => {
+          const impersonated = this.impersonationService.getImpersonatedUser();
+          if (impersonated) {
+            const filtered = tanks.filter(t => t.owner === impersonated.id);
+            observer.next(filtered);
+          } else {
+            observer.next(tanks);
+          }
+          observer.complete();
+        },
+        error: (err) => observer.error(err)
+      });
+    });
   }
 
   create(tank: Tank): Observable<Tank> {

@@ -1,8 +1,23 @@
 <div class="app-container">
+  <div class="impersonation-banner" *ngIf="isImpersonating()">
+    <div class="impersonation-content">
+      <span class="imp-icon">👁️</span>
+      <span class="imp-text">
+        Viendo como <strong>{{ impersonatedUser?.nombre }} {{ impersonatedUser?.apellido }}</strong> 
+        (&commat;{{ impersonatedUser?.username }})
+      </span>
+    </div>
+    <button class="exit-imp-btn" (click)="exitImpersonation()">
+      Salir de esta vista
+    </button>
+  </div>
+
   <header class="app-header">
     <div class="header-left">
       <h1>Telemetría Maicao</h1>
-      <p>Bienvenido de vuelta</p>
+      <p *ngIf="currentUser && !isImpersonating()">Bienvenido, {{ currentUser.nombre || currentUser.username }}</p>
+      <p *ngIf="isImpersonating()">Modo administrador · Vista de usuario</p>
+      <p *ngIf="!currentUser">Bienvenido de vuelta</p>
     </div>
     <div class="header-right">
       <button class="icon-btn" (click)="toggleTheme()">
@@ -13,7 +28,23 @@
         🔔
         <span class="badge">{{ alertCount }}</span>
       </button>
-      <button class="icon-btn wifi-btn">📶</button>
+      <div class="user-menu-wrapper">
+        <button class="icon-btn user-btn" (click)="toggleUserMenu()">
+          <span class="user-avatar">{{ (currentUser?.username || 'U').charAt(0).toUpperCase() }}</span>
+        </button>
+        <div class="user-dropdown" *ngIf="showUserMenu">
+          <div class="user-info">
+            <div class="user-name">{{ currentUser?.nombre || currentUser?.username }}</div>
+            <div class="user-role" [class.admin-role]="isAdmin()">
+              {{ isAdmin() ? '👑 Administrador' : '👤 Usuario' }}
+            </div>
+            <div class="user-email">{{ currentUser?.email || '' }}</div>
+          </div>
+          <button class="logout-btn" (click)="logout()">
+            🚪 Cerrar sesión
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -21,7 +52,7 @@
     <router-outlet />
   </main>
 
-  <nav class="bottom-nav">
+  <nav class="bottom-nav" *ngIf="!isAdmin() || isImpersonating()">
     <button class="nav-item" [class.active]="activeTab === 'inicio'" (click)="navigate('dashboard', 'inicio')">
       <span class="nav-icon">⊞</span>
       <span class="nav-label">Inicio</span>
@@ -41,6 +72,25 @@
     <button class="nav-item" [class.active]="activeTab === 'agregar'" (click)="navigate('add-tank', 'agregar')">
       <span class="nav-icon">⊕</span>
       <span class="nav-label">Agregar</span>
+    </button>
+  </nav>
+
+  <nav class="bottom-nav" *ngIf="isAdmin() && !isImpersonating()">
+    <button class="nav-item" [class.active]="activeTab === 'inicio'" (click)="navigate('dashboard-admin', 'inicio')">
+      <span class="nav-icon">⊞</span>
+      <span class="nav-label">Sistema</span>
+    </button>
+    <button class="nav-item" [class.active]="activeTab === 'usuarios'" (click)="navigate('users-admin', 'usuarios')">
+      <span class="nav-icon">👥</span>
+      <span class="nav-label">Usuarios</span>
+    </button>
+    <button class="nav-item" [class.active]="activeTab === 'alertas'" (click)="navigate('alerts', 'alertas')">
+      <span class="nav-icon">🔔</span>
+      <span class="nav-label">Alertas</span>
+    </button>
+    <button class="nav-item" [class.active]="activeTab === 'stats'" (click)="navigate('stats', 'stats')">
+      <span class="nav-icon">📊</span>
+      <span class="nav-label">Stats</span>
     </button>
   </nav>
 </div>

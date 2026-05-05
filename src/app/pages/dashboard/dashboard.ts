@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { TankService, Tank } from '../../core/services/tank';
 import { ReadingService } from '../../core/services/reading';
 import { AlertService } from '../../core/services/alert';
+import { ImpersonationService } from '../../core/services/impersonation';
 import { forkJoin } from 'rxjs';
 
 interface TankWithLevel extends Tank {
@@ -33,6 +34,7 @@ export class Dashboard implements OnInit {
     private tankService: TankService,
     private readingService: ReadingService,
     private alertService: AlertService,
+    private impersonationService: ImpersonationService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
@@ -44,7 +46,7 @@ export class Dashboard implements OnInit {
 
   loadDashboard(): void {
     forkJoin({
-      tanks: this.tankService.getAll(),
+      tanks: this.tankService.getForCurrentView(),
       readings: this.readingService.getAll()
     }).subscribe({
       next: ({ tanks, readings }) => {
@@ -93,8 +95,17 @@ export class Dashboard implements OnInit {
   loadAlerts(): void {
     this.alertService.getAll().subscribe({
       next: (alerts) => {
-        this.activeAlerts = alerts.filter(a => !a.is_read).length;
-        this.cdr.detectChanges();
+        const impersonated = this.impersonationService.getImpersonatedUser();
+        if (impersonated) {
+          this.tankService.getForCurrentView().subscribe(tanks => {
+            const tankIds = tanks.map(t => t.id);
+            this.activeAlerts = alerts.filter(a => !a.is_read && tankIds.includes(a.tank)).length;
+            this.cdr.detectChanges();
+          });
+        } else {
+          this.activeAlerts = alerts.filter(a => !a.is_read).length;
+          this.cdr.detectChanges();
+        }
       },
       error: () => {
         this.activeAlerts = 0;

@@ -1,0 +1,158 @@
+<div class="admin-dashboard">
+  <div class="welcome-banner">
+    <div class="banner-content">
+      <span class="banner-icon">👑</span>
+      <div>
+        <h2>Panel de Administración</h2>
+        <p>Vista global del sistema de telemetría</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-overview">
+    <div class="big-stat-card users">
+      <div class="big-stat-icon">👥</div>
+      <div class="big-stat-content">
+        <div class="big-stat-value">{{ totalUsers }}</div>
+        <div class="big-stat-label">Usuarios Registrados</div>
+        <div class="big-stat-sub">{{ activeUsers }} activos</div>
+      </div>
+    </div>
+
+    <div class="big-stat-card tanks">
+      <div class="big-stat-icon">💧</div>
+      <div class="big-stat-content">
+        <div class="big-stat-value">{{ totalTanks }}</div>
+        <div class="big-stat-label">Tanques Totales</div>
+        <div class="big-stat-sub">{{ onlineTanks }} en línea</div>
+      </div>
+    </div>
+
+    <div class="big-stat-card readings">
+      <div class="big-stat-icon">📡</div>
+      <div class="big-stat-content">
+        <div class="big-stat-value">{{ totalReadings }}</div>
+        <div class="big-stat-label">Lecturas Recibidas</div>
+        <div class="big-stat-sub">Histórico</div>
+      </div>
+    </div>
+
+    <div class="big-stat-card alerts">
+      <div class="big-stat-icon">🔔</div>
+      <div class="big-stat-content">
+        <div class="big-stat-value">{{ activeAlerts }}</div>
+        <div class="big-stat-label">Alertas Activas</div>
+        <div class="big-stat-sub">{{ totalAlerts }} históricas</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-row">
+    <div class="chart-card">
+      <h3 class="chart-title">📊 Capacidad Total del Sistema</h3>
+      <div class="capacity-display">
+        <div class="capacity-circle">
+          <div class="capacity-value">{{ totalCapacity | number:'1.0-0' }}L</div>
+          <div class="capacity-label">Capacidad total</div>
+        </div>
+        <div class="capacity-info">
+          <div class="capacity-row">
+            <span class="info-dot full"></span>
+            <span class="info-label">En línea</span>
+            <span class="info-value">{{ onlineTanks }} / {{ totalTanks }}</span>
+          </div>
+          <div class="capacity-row">
+            <span class="info-dot warning"></span>
+            <span class="info-label">Sin lecturas</span>
+            <span class="info-value">{{ totalTanks - onlineTanks }}</span>
+          </div>
+          <div class="capacity-row">
+            <span class="info-dot info"></span>
+            <span class="info-label">Promedio por usuario</span>
+            <span class="info-value">{{ tanksPerUser | number:'1.1-1' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3 class="chart-title">🚨 Estado de Alertas</h3>
+      <div class="alerts-summary">
+        <div class="alert-bar">
+          <div class="alert-bar-label">
+            <span class="bar-dot danger"></span>
+            <span>Críticas</span>
+          </div>
+          <div class="alert-bar-track">
+            <div class="alert-bar-fill danger" [style.width.%]="getAlertPercent('CRITICAL')"></div>
+          </div>
+          <span class="alert-bar-count">{{ getAlertCount('CRITICAL') }}</span>
+        </div>
+
+        <div class="alert-bar">
+          <div class="alert-bar-label">
+            <span class="bar-dot warning"></span>
+            <span>Nivel bajo</span>
+          </div>
+          <div class="alert-bar-track">
+            <div class="alert-bar-fill warning" [style.width.%]="getAlertPercent('LOW')"></div>
+          </div>
+          <span class="alert-bar-count">{{ getAlertCount('LOW') }}</span>
+        </div>
+
+        <div class="alert-bar">
+          <div class="alert-bar-label">
+            <span class="bar-dot success"></span>
+            <span>Desbordamiento</span>
+          </div>
+          <div class="alert-bar-track">
+            <div class="alert-bar-fill success" [style.width.%]="getAlertPercent('OVERFLOW')"></div>
+          </div>
+          <span class="alert-bar-count">{{ getAlertCount('OVERFLOW') }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="users-overview">
+    <div class="section-header">
+      <h3>📋 Resumen por Usuario</h3>
+      <button class="manage-btn" (click)="goToUsers()">Gestionar usuarios →</button>
+    </div>
+
+    <div class="users-grid">
+      <div class="user-overview-card" *ngFor="let user of usersWithStats">
+        <div class="user-overview-header">
+          <div class="user-overview-avatar" [class.admin]="hasAdminRole(user)">
+            {{ (user.username || 'U').charAt(0).toUpperCase() }}
+          </div>
+          <div class="user-overview-info">
+            <h4>{{ user.nombre }} {{ user.apellido }}</h4>
+            <p>&commat;{{ user.username }}</p>
+          </div>
+          <button class="view-as-btn" (click)="viewAsUser(user)" [disabled]="hasAdminRole(user)">
+            👁️ Ver como
+          </button>
+        </div>
+        <div class="user-overview-stats">
+          <div class="mini-stat">
+            <span class="mini-stat-value">{{ user.tankCount }}</span>
+            <span class="mini-stat-label">Tanques</span>
+          </div>
+          <div class="mini-stat">
+            <span class="mini-stat-value">{{ user.readingCount }}</span>
+            <span class="mini-stat-label">Lecturas</span>
+          </div>
+          <div class="mini-stat">
+            <span class="mini-stat-value danger">{{ user.alertCount }}</span>
+            <span class="mini-stat-label">Alertas</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="usersWithStats.length === 0 && !loading">
+        <p>No hay usuarios registrados aún</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Auth } from '../../core/services/auth';
+import { UserService } from '../../core/services/user';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +21,7 @@ export class Login {
 
   constructor(
     private authService: Auth,
+    private userService: UserService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
@@ -41,9 +43,22 @@ export class Login {
         this.loginSuccess = true;
         this.cdr.detectChanges();
 
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 2200);
+        this.userService.getMe().subscribe({
+          next: (user) => {
+            setTimeout(() => {
+              if (user.is_admin) {
+                this.router.navigate(['/dashboard-admin']);
+              } else {
+                this.router.navigate(['/dashboard']);
+              }
+            }, 2200);
+          },
+          error: () => {
+            setTimeout(() => {
+              this.router.navigate(['/dashboard']);
+            }, 2200);
+          }
+        });
       },
       error: () => {
         this.loading = false;
