@@ -67,13 +67,27 @@
       <div class="tank-actions">
         <button class="action-btn fill">▲ Llenar</button>
         <button class="action-btn consume">▼ Consumir</button>
-        <button class="action-btn delete">🗑️</button>
+        <button class="action-btn delete" (click)="confirmDelete(tank)">🗑️</button>
       </div>
     </div>
 
     <div class="empty-state" *ngIf="tanks.length === 0">
       <p>No tienes tanques registrados</p>
       <button class="add-btn-large" (click)="addTank()">+ Agregar tu primer tanque</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showDeleteModal" (click)="cancelDelete()">
+    <div class="delete-modal-content" (click)="$event.stopPropagation()">
+      <div class="delete-icon-wrap">⚠️</div>
+      <h3>¿Eliminar tanque?</h3>
+      <p>Estás a punto de eliminar el tanque <strong>{{ tankToDelete?.name }}</strong>. Esta acción no se puede deshacer y se borrarán todas las lecturas y alertas asociadas.</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="cancelDelete()">Cancelar</button>
+        <button class="btn-confirm-delete" (click)="deleteTank()" [disabled]="deleting">
+          {{ deleting ? 'Eliminando...' : 'Eliminar' }}
+        </button>
+      </div>
     </div>
   </div>
 </div>

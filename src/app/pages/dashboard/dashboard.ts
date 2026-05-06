@@ -30,6 +30,10 @@ export class Dashboard implements OnInit {
   efficiency = 'Sin datos';
   nextFill = '—';
 
+  showDeleteModal = false;
+  tankToDelete: TankWithLevel | null = null;
+  deleting = false;
+
   constructor(
     private tankService: TankService,
     private readingService: ReadingService,
@@ -121,5 +125,39 @@ export class Dashboard implements OnInit {
 
   addTank(): void {
     this.router.navigate(['/add-tank']);
+  }
+
+  confirmDelete(tank: TankWithLevel): void {
+    this.tankToDelete = tank;
+    this.showDeleteModal = true;
+    this.cdr.detectChanges();
+  }
+
+  cancelDelete(): void {
+    this.showDeleteModal = false;
+    this.tankToDelete = null;
+    this.cdr.detectChanges();
+  }
+
+  deleteTank(): void {
+    if (!this.tankToDelete || !this.tankToDelete.id) return;
+    
+    this.deleting = true;
+    this.cdr.detectChanges();
+
+    this.tankService.delete(this.tankToDelete.id).subscribe({
+      next: () => {
+        this.deleting = false;
+        this.showDeleteModal = false;
+        this.tankToDelete = null;
+        this.loadDashboard();
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error eliminando tanque:', err);
+        this.deleting = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 }
