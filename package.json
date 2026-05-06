@@ -1,14 +1,14 @@
 {
   "name": "frontend",
   "version": "0.0.0",
-  "scripts": {
+"scripts": {
     "ng": "ng",
-    "start": "http-server dist/frontend/browser -p $PORT -c-1 --proxy http://localhost:$PORT?",
+    "start": "serve -s dist/frontend/browser -l $PORT",
     "build": "ng build",
     "dev": "ng serve",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
-  },
+},
   "private": true,
   "packageManager": "npm@10.9.3",
   "dependencies": {
@@ -20,6 +20,7 @@
     "@angular/router": "^21.2.0",
     "http-server": "^14.1.1",
     "rxjs": "~7.8.0",
+    "serve": "^14.2.6",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
