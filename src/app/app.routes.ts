@@ -11,6 +11,7 @@ import { Ia } from './pages/ia/ia';
 import { UsersAdmin } from './pages/users-admin/users-admin';
 import { DevicesAdmin } from './pages/devices-admin/devices-admin';
 import { SystemLogs } from './pages/system-logs/system-logs';
+import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -18,18 +19,20 @@ export const routes: Routes = [
   {
     path: '',
     component: Layout,
+    canActivate: [authGuard],
     children: [
-      { path: 'dashboard', component: Dashboard },
-      { path: 'dashboard-admin', component: DashboardAdmin },
-      { path: 'tanks', component: Tanks },
-      { path: 'readings', component: Readings },
-      { path: 'alerts', component: Alerts },
-      { path: 'stats', component: Stats },
-      { path: 'ia', component: Ia },
-      { path: 'users-admin', component: UsersAdmin },
-      { path: 'devices-admin', component: DevicesAdmin },
-      { path: 'system-logs', component: SystemLogs },
-      { path: 'add-tank', component: Tanks }
+      { path: 'dashboard', component: Dashboard, canActivate: [authGuard] },
+      { path: 'dashboard-admin', component: DashboardAdmin, canActivate: [authGuard] },
+      { path: 'tanks', component: Tanks, canActivate: [authGuard] },
+      { path: 'readings', component: Readings, canActivate: [authGuard] },
+      { path: 'alerts', component: Alerts, canActivate: [authGuard] },
+      { path: 'stats', component: Stats, canActivate: [authGuard] },
+      { path: 'ia', component: Ia, canActivate: [authGuard] },
+      { path: 'users-admin', component: UsersAdmin, canActivate: [authGuard] },
+      { path: 'devices-admin', component: DevicesAdmin, canActivate: [authGuard] },
+      { path: 'system-logs', component: SystemLogs, canActivate: [authGuard] },
+      { path: 'add-tank', component: Tanks, canActivate: [authGuard] }
     ]
-  }
+  },
+  { path: '**', redirectTo: 'login' }
 ];
