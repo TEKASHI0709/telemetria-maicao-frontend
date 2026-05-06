@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "http-server dist/frontend/browser -p $PORT -c-1",
+    "start": "http-server dist/frontend/browser -p $PORT -c-1 --proxy http://localhost:$PORT?",
     "build": "ng build",
     "dev": "ng serve",
     "watch": "ng build --watch --configuration development",
