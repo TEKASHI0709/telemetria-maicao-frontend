@@ -1,14 +1,14 @@
 {
   "name": "frontend",
   "version": "0.0.0",
-"scripts": {
+  "scripts": {
     "ng": "ng",
     "start": "serve -s dist/frontend/browser -l $PORT",
     "build": "ng build",
     "dev": "ng serve",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
-},
+  },
   "private": true,
   "packageManager": "npm@10.9.3",
   "dependencies": {
