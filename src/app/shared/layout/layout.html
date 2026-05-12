@@ -14,11 +14,14 @@
 
   <header class="app-header">
     <div class="header-left">
-      <h1>Telemetría Maicao</h1>
-      <p *ngIf="currentUser && !isImpersonating()">Bienvenido, {{ currentUser.nombre || currentUser.username }}</p>
-      <p *ngIf="isImpersonating()">Modo administrador · Vista de usuario</p>
-      <p *ngIf="!currentUser">Bienvenido de vuelta</p>
-    </div>
+  <img src="logo.png" alt="Telemetría Maicao" class="header-logo">
+  <div class="header-text">
+    <h1>Telemetría Maicao</h1>
+    <p *ngIf="currentUser && !isImpersonating()">Bienvenido, {{ currentUser.nombre || currentUser.username }}</p>
+    <p *ngIf="isImpersonating()">Modo administrador · Vista de usuario</p>
+    <p *ngIf="!currentUser">Bienvenido de vuelta</p>
+  </div>
+</div>
     <div class="header-right">
       <button class="icon-btn" (click)="toggleTheme()">
         <span *ngIf="theme === 'dark'">☀️</span>
