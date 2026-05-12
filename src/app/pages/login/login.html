@@ -114,4 +114,18 @@
       </div>
     </div>
   </div>
+  <div class="error-overlay" *ngIf="loginError">
+    <div class="error-content">
+      <div class="error-icon-wrap">
+        <svg viewBox="0 0 100 100" class="prohibited-svg">
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#ef4444" stroke-width="6" class="circle-draw" />
+          <line x1="25" y1="25" x2="75" y2="75" stroke="#ef4444" stroke-width="6" stroke-linecap="round"
+            class="line-draw" />
+        </svg>
+      </div>
+      <h2 class="error-message">Acceso denegado</h2>
+      <p class="error-submessage">{{ errorMessage }}</p>
+      <button class="try-again-btn" (click)="closeError()">Intentar de nuevo</button>
+    </div>
+  </div>
 </div>

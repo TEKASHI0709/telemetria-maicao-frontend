@@ -16,7 +16,9 @@ export class Login {
   password = '';
   loading = false;
   loginSuccess = false;
+  loginError = false;
   error = '';
+  errorMessage = '';
   particles = Array(12).fill(0);
 
   constructor(
@@ -28,7 +30,8 @@ export class Login {
 
   onSubmit(): void {
     if (!this.username || !this.password) {
-      this.error = 'Por favor completa todos los campos';
+      this.errorMessage = 'Debes completar todos los campos';
+      this.loginError = true;
       this.cdr.detectChanges();
       return;
     }
@@ -62,9 +65,17 @@ export class Login {
       },
       error: () => {
         this.loading = false;
-        this.error = 'Usuario o contraseña incorrectos';
+        this.errorMessage = 'Usuario o contraseña incorrectos';
+        this.loginError = true;
         this.cdr.detectChanges();
       }
     });
+  }
+
+  closeError(): void {
+    this.loginError = false;
+    this.errorMessage = '';
+    this.password = '';
+    this.cdr.detectChanges();
   }
 }

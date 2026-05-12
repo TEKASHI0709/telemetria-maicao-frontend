@@ -3,7 +3,7 @@
     <div class="impersonation-content">
       <span class="imp-icon">👁️</span>
       <span class="imp-text">
-        Viendo como <strong>{{ impersonatedUser?.nombre }} {{ impersonatedUser?.apellido }}</strong>
+        Viendo como <strong>{{ impersonatedUser?.nombre }} {{ impersonatedUser?.apellido }}</strong> 
         (&commat;{{ impersonatedUser?.username }})
       </span>
     </div>
@@ -24,12 +24,47 @@
         <span *ngIf="theme === 'dark'">☀️</span>
         <span *ngIf="theme === 'light'">🌙</span>
       </button>
-      <button class="icon-btn notification-btn">
-        🔔
-        <span class="badge">{{ alertCount }}</span>
-      </button>
+
+      <div class="alerts-menu-wrapper">
+        <button class="icon-btn notification-btn" (click)="toggleAlertsPanel($event)">
+          🔔
+          <span class="badge" *ngIf="alertCount > 0">{{ alertCount }}</span>
+        </button>
+        <div class="alerts-dropdown" *ngIf="showAlertsPanel">
+          <div class="alerts-dropdown-header">
+            <h4>🔔 Alertas</h4>
+            <span class="alerts-count" *ngIf="alertCount > 0">{{ alertCount }} sin leer</span>
+          </div>
+          
+          <div class="alerts-dropdown-list">
+            <div class="alert-item" *ngFor="let alert of alerts" [class.read]="alert.is_read" (click)="markAlertAsRead(alert, $event)">
+              <div class="alert-item-icon" [class.critical]="alert.alert_type === 'CRITICAL'" [class.low]="alert.alert_type === 'LOW'" [class.overflow]="alert.alert_type === 'OVERFLOW'">
+                {{ getAlertIcon(alert.alert_type) }}
+              </div>
+              <div class="alert-item-content">
+                <div class="alert-item-header">
+                  <span class="alert-item-tank">{{ getTankName(alert.tank) }}</span>
+                  <span class="alert-item-time">{{ formatAlertTime(alert.created_at) }}</span>
+                </div>
+                <p class="alert-item-message">{{ alert.message }}</p>
+              </div>
+              <span class="unread-dot" *ngIf="!alert.is_read"></span>
+            </div>
+
+            <div class="alerts-empty" *ngIf="alerts.length === 0">
+              <div class="empty-bell">🔕</div>
+              <p>No hay alertas</p>
+            </div>
+          </div>
+
+          <button class="view-all-btn" (click)="goToAllAlerts()" *ngIf="alerts.length > 0">
+            Ver todas las alertas →
+          </button>
+        </div>
+      </div>
+
       <div class="user-menu-wrapper">
-        <button class="icon-btn user-btn" (click)="toggleUserMenu()">
+        <button class="icon-btn user-btn" (click)="toggleUserMenu($event)">
           <span class="user-avatar">{{ (currentUser?.username || 'U').charAt(0).toUpperCase() }}</span>
         </button>
         <div class="user-dropdown" *ngIf="showUserMenu">
@@ -60,10 +95,6 @@
       <span class="nav-icon">⊞</span>
       <span class="nav-label">Inicio</span>
     </button>
-    <button class="nav-item" [class.active]="activeTab === 'alertas'" (click)="navigate('alerts', 'alertas')">
-      <span class="nav-icon">🔔</span>
-      <span class="nav-label">Alertas</span>
-    </button>
     <button class="nav-item" [class.active]="activeTab === 'stats'" (click)="navigate('stats', 'stats')">
       <span class="nav-icon">📊</span>
       <span class="nav-label">Stats</span>
@@ -87,8 +118,7 @@
       <span class="nav-icon">👥</span>
       <span class="nav-label">Usuarios</span>
     </button>
-    <button class="nav-item" [class.active]="activeTab === 'dispositivos'"
-      (click)="navigate('devices-admin', 'dispositivos')">
+    <button class="nav-item" [class.active]="activeTab === 'dispositivos'" (click)="navigate('devices-admin', 'dispositivos')">
       <span class="nav-icon">📡</span>
       <span class="nav-label">Dispositivos</span>
     </button>
