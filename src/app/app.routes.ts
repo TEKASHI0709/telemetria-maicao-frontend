@@ -11,6 +11,7 @@ import { Ia } from './pages/ia/ia';
 import { UsersAdmin } from './pages/users-admin/users-admin';
 import { DevicesAdmin } from './pages/devices-admin/devices-admin';
 import { SystemLogs } from './pages/system-logs/system-logs';
+import { MyProfile } from './pages/my-profile/my-profile';
 import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
@@ -31,6 +32,7 @@ export const routes: Routes = [
       { path: 'users-admin', component: UsersAdmin, canActivate: [authGuard] },
       { path: 'devices-admin', component: DevicesAdmin, canActivate: [authGuard] },
       { path: 'system-logs', component: SystemLogs, canActivate: [authGuard] },
+      { path: 'my-profile', component: MyProfile, canActivate: [authGuard] },
       { path: 'add-tank', component: Tanks, canActivate: [authGuard] }
     ]
   },

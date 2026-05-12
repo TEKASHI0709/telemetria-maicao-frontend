@@ -46,6 +46,7 @@
       </div>
       <div class="user-actions">
         <button class="action-icon edit" (click)="openEditModal(user)" title="Editar">✏️</button>
+        <button class="action-icon reset" (click)="openResetPasswordModal(user)" title="Resetear contraseña" *ngIf="user.username !== 'admin'">🔑</button>
         <button class="action-icon delete" (click)="confirmDelete(user)" title="Eliminar" *ngIf="user.username !== 'admin'">🗑️</button>
       </div>
     </div>
@@ -122,6 +123,39 @@
           <button type="button" class="btn-cancel" (click)="closeModal()">Cancelar</button>
           <button type="submit" class="btn-save" [disabled]="saving">
             {{ saving ? 'Guardando...' : (editMode ? 'Actualizar' : 'Crear Usuario') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showResetModal" (click)="closeResetModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>🔑 Resetear Contraseña</h3>
+        <button class="close-btn" (click)="closeResetModal()">✕</button>
+      </div>
+
+      <p class="reset-info">Estás reseteando la contraseña del usuario <strong>{{ userToReset?.username }}</strong>. Esta acción se registrará en los logs del sistema.</p>
+
+      <form (ngSubmit)="resetPassword()" class="user-form">
+        <div class="form-group">
+          <label>Nueva contraseña</label>
+          <input type="password" [(ngModel)]="newPassword" name="newPassword" placeholder="Mínimo 6 caracteres" required>
+        </div>
+
+        <div class="form-group">
+          <label>Confirmar contraseña</label>
+          <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="Repetir contraseña" required>
+        </div>
+
+        <p class="form-error" *ngIf="resetError">⚠ {{ resetError }}</p>
+        <p class="form-success" *ngIf="resetSuccess">✓ {{ resetSuccess }}</p>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" (click)="closeResetModal()">Cancelar</button>
+          <button type="submit" class="btn-save" [disabled]="resetting">
+            {{ resetting ? 'Reseteando...' : 'Resetear contraseña' }}
           </button>
         </div>
       </form>

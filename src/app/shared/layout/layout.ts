@@ -29,13 +29,13 @@ export class Layout implements OnInit {
     private authService: Auth,
     private impersonationService: ImpersonationService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.theme = this.themeService.getCurrentTheme();
     this.loadCurrentUser();
     this.loadAlertCount();
-    
+
     this.impersonationService.impersonatedUser$.subscribe(user => {
       this.impersonatedUser = user;
       this.cdr.detectChanges();
@@ -98,5 +98,10 @@ export class Layout implements OnInit {
   exitImpersonation(): void {
     this.impersonationService.stopImpersonation();
     this.router.navigate(['/dashboard-admin']);
+  }
+
+  goToProfile(): void {
+    this.showUserMenu = false;
+    this.router.navigate(['/my-profile']);
   }
 }

@@ -14,13 +14,20 @@ export class UsersAdmin implements OnInit {
   roles: Rol[] = [];
   loading = true;
   saving = false;
-  
+  resetting = false;
+
   showModal = false;
   showDeleteModal = false;
+  showResetModal = false;
   editMode = false;
   editingUserId: number | null = null;
   userToDelete: User | null = null;
+  userToReset: User | null = null;
   formError = '';
+  resetError = '';
+  resetSuccess = '';
+  newPassword = '';
+  confirmPassword = '';
 
   formData = {
     username: '',
@@ -149,7 +156,7 @@ export class UsersAdmin implements OnInit {
         is_active: this.formData.is_active,
         roles: [role.id]
       };
-      
+
       this.userService.update(this.editingUserId, updateData).subscribe({
         next: () => {
           this.saving = false;
@@ -188,6 +195,57 @@ export class UsersAdmin implements OnInit {
     }
   }
 
+  openResetPasswordModal(user: User): void {
+    this.userToReset = user;
+    this.newPassword = '';
+    this.confirmPassword = '';
+    this.resetError = '';
+    this.resetSuccess = '';
+    this.showResetModal = true;
+  }
+
+  closeResetModal(): void {
+    this.showResetModal = false;
+    this.userToReset = null;
+    this.resetError = '';
+    this.resetSuccess = '';
+  }
+
+  resetPassword(): void {
+    if (!this.userToReset) return;
+
+    if (!this.newPassword || this.newPassword.length < 6) {
+      this.resetError = 'La contraseña debe tener al menos 6 caracteres';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    if (this.newPassword !== this.confirmPassword) {
+      this.resetError = 'Las contraseñas no coinciden';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.resetting = true;
+    this.resetError = '';
+
+    this.userService.resetPassword(this.userToReset.id, this.newPassword).subscribe({
+      next: () => {
+        this.resetting = false;
+        this.resetSuccess = 'Contraseña actualizada correctamente';
+        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.closeResetModal();
+        }, 1500);
+      },
+      error: (err) => {
+        this.resetting = false;
+        this.resetError = err.error?.detail || 'Error al resetear la contraseña';
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   confirmDelete(user: User): void {
     this.userToDelete = user;
     this.showDeleteModal = true;
@@ -200,7 +258,7 @@ export class UsersAdmin implements OnInit {
 
   deleteUser(): void {
     if (!this.userToDelete) return;
-    
+
     this.userService.delete(this.userToDelete.id).subscribe({
       next: () => {
         this.showDeleteModal = false;

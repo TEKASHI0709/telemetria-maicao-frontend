@@ -156,6 +156,27 @@
   color: var(--text-muted);
 }
 
+.profile-btn {
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  background: none;
+  border: none;
+  color: var(--accent-cyan);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.profile-btn:hover {
+  background: rgba(6, 182, 212, 0.1);
+}
+
 .logout-btn {
   width: 100%;
   padding: 0.85rem 1.25rem;

@@ -82,6 +82,23 @@ export class UserService {
     return this.http.delete<void>(`${this.apiUrl}${id}/`, { headers: this.getHeaders() });
   }
 
+  resetPassword(id: number, newPassword: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}${id}/reset-password/`, { new_password: newPassword }, { headers: this.getHeaders() });
+  }
+
+  changeMyPassword(currentPassword: string, newPassword: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}change-password/`, {
+      current_password: currentPassword,
+      new_password: newPassword
+    }, { headers: this.getHeaders() });
+  }
+
+  updateMyProfile(data: { nombre?: string; apellido?: string; email?: string }): Observable<User> {
+    return this.http.patch<User>(`${this.apiUrl}update-profile/`, data, { headers: this.getHeaders() }).pipe(
+      tap(user => this.currentUserSubject.next(user))
+    );
+  }
+
   getRoles(): Observable<Rol[]> {
     return this.http.get<Rol[]>(this.rolesUrl, { headers: this.getHeaders() });
   }

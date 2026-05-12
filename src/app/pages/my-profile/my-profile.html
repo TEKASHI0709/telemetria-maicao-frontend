@@ -1,0 +1,85 @@
+<div class="profile-page">
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">👤 Mi Perfil</h2>
+      <p class="page-subtitle">Gestiona tu información personal y seguridad</p>
+    </div>
+  </div>
+
+  <div class="profile-card">
+    <div class="profile-avatar-wrap">
+      <div class="profile-avatar" [class.admin]="currentUser?.is_admin">
+        {{ (currentUser?.username || 'U').charAt(0).toUpperCase() }}
+      </div>
+      <div class="profile-info">
+        <h3>{{ currentUser?.nombre }} {{ currentUser?.apellido }}</h3>
+        <p class="profile-username">&commat;{{ currentUser?.username }}</p>
+        <span class="profile-role" [class.admin-role]="currentUser?.is_admin">
+          {{ currentUser?.is_admin ? '👑 Administrador' : '👤 Usuario' }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-section">
+    <h3 class="section-title">📝 Información Personal</h3>
+    <form (ngSubmit)="updateProfile()" class="profile-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" [(ngModel)]="profileData.nombre" name="nombre" placeholder="Tu nombre">
+        </div>
+        <div class="form-group">
+          <label>Apellido</label>
+          <input type="text" [(ngModel)]="profileData.apellido" name="apellido" placeholder="Tu apellido">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="profileData.email" name="email" placeholder="tu@correo.com">
+      </div>
+
+      <div class="form-group">
+        <label>Usuario</label>
+        <input type="text" [value]="currentUser?.username" disabled>
+        <small>El nombre de usuario no se puede cambiar</small>
+      </div>
+
+      <p class="form-error" *ngIf="profileError">⚠ {{ profileError }}</p>
+      <p class="form-success" *ngIf="profileSuccess">✓ {{ profileSuccess }}</p>
+
+      <button type="submit" class="btn-save" [disabled]="savingProfile">
+        {{ savingProfile ? 'Guardando...' : '💾 Guardar Cambios' }}
+      </button>
+    </form>
+  </div>
+
+  <div class="profile-section">
+    <h3 class="section-title">🔒 Cambiar Contraseña</h3>
+    <form (ngSubmit)="changePassword()" class="profile-form">
+      <div class="form-group">
+        <label>Contraseña actual</label>
+        <input type="password" [(ngModel)]="passwordData.current" name="current" placeholder="••••••••" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nueva contraseña</label>
+          <input type="password" [(ngModel)]="passwordData.new" name="new" placeholder="Mínimo 6 caracteres" required>
+        </div>
+        <div class="form-group">
+          <label>Confirmar nueva</label>
+          <input type="password" [(ngModel)]="passwordData.confirm" name="confirm" placeholder="Repetir contraseña" required>
+        </div>
+      </div>
+
+      <p class="form-error" *ngIf="passwordError">⚠ {{ passwordError }}</p>
+      <p class="form-success" *ngIf="passwordSuccess">✓ {{ passwordSuccess }}</p>
+
+      <button type="submit" class="btn-save danger" [disabled]="changingPassword">
+        {{ changingPassword ? 'Cambiando...' : '🔑 Cambiar Contraseña' }}
+      </button>
+    </form>
+  </div>
+</div>
