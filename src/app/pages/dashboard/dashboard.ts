@@ -1,11 +1,12 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TankService, Tank } from '../../core/services/tank';
 import { ReadingService } from '../../core/services/reading';
 import { AlertService } from '../../core/services/alert';
 import { ImpersonationService } from '../../core/services/impersonation';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription, interval } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 interface TankWithLevel extends Tank {
   level: number;
@@ -20,7 +21,7 @@ interface TankWithLevel extends Tank {
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
-export class Dashboard implements OnInit {
+export class Dashboard implements OnInit, OnDestroy {
   tanks: TankWithLevel[] = [];
   totalTanks = 0;
   onlineTanks = 0;
@@ -29,10 +30,14 @@ export class Dashboard implements OnInit {
   dailyConsumption = 0;
   efficiency = 'Sin datos';
   nextFill = '—';
+  lastUpdate = '';
 
   showDeleteModal = false;
   tankToDelete: TankWithLevel | null = null;
   deleting = false;
+
+  private pollingSubscription: Subscription | null = null;
+  private alertSubscription: Subscription | null = null;
 
   constructor(
     private tankService: TankService,
@@ -46,6 +51,25 @@ export class Dashboard implements OnInit {
   ngOnInit(): void {
     this.loadDashboard();
     this.loadAlerts();
+    this.startPolling();
+  }
+
+  ngOnDestroy(): void {
+    this.stopPolling();
+  }
+
+  startPolling(): void {
+    this.pollingSubscription = interval(3000).subscribe(() => {
+      this.loadDashboard();
+      this.loadAlerts();
+    });
+  }
+
+  stopPolling(): void {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+      this.pollingSubscription = null;
+    }
   }
 
   loadDashboard(): void {
@@ -87,6 +111,13 @@ export class Dashboard implements OnInit {
           this.averageLevel = 0;
           this.efficiency = 'Sin datos';
         }
+
+        const now = new Date();
+        this.lastUpdate = now.toLocaleTimeString('es-CO', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
 
         this.cdr.detectChanges();
       },
@@ -141,7 +172,7 @@ export class Dashboard implements OnInit {
 
   deleteTank(): void {
     if (!this.tankToDelete || !this.tankToDelete.id) return;
-    
+
     this.deleting = true;
     this.cdr.detectChanges();
 

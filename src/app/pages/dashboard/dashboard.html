@@ -38,11 +38,13 @@
     </div>
   </div>
 
-  <div class="tanks-section">
-    <div class="section-header">
-      <h3>Mis Tanques</h3>
-      <button class="add-btn" (click)="addTank()">+ Agregar</button>
-    </div>
+  <div class="section-header">
+  <h3>Mis Tanques</h3>
+  <div class="header-actions">
+    <span class="last-update" *ngIf="lastUpdate">🕒 {{ lastUpdate }}</span>
+    <button class="add-btn" (click)="addTank()">+ Agregar</button>
+  </div>
+</div>
 
     <div class="tank-card" *ngFor="let tank of tanks">
       <div class="tank-info">
