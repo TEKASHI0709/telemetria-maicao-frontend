@@ -1,4 +1,5 @@
 <div class="dashboard">
+  
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-number">{{ totalTanks }}</div>
@@ -39,44 +40,43 @@
   </div>
 
   <div class="section-header">
-  <h3>Mis Tanques</h3>
-  <div class="header-actions">
-    <span class="last-update" *ngIf="lastUpdate">🕒 {{ lastUpdate }}</span>
-    <button class="add-btn" (click)="addTank()">+ Agregar</button>
+    <h3>Mis Tanques</h3>
+    <div class="header-actions">
+      <span class="last-update" *ngIf="lastUpdate">🕒 {{ lastUpdate }}</span>
+      <button class="add-btn" (click)="addTank()">+ Agregar</button>
+    </div>
   </div>
-</div>
 
-    <div class="tank-card" *ngFor="let tank of tanks">
-      <div class="tank-info">
-        <div class="tank-icon" [class.full]="tank.level >= 90" [class.normal]="tank.level >= 40 && tank.level < 90" [class.low]="tank.level < 40"></div>
-        <div class="tank-details">
-          <div class="tank-name-row">
-            <h4>{{ tank.name }}</h4>
-            <span class="tank-status" [class.full]="tank.level >= 90" [class.normal]="tank.level >= 40 && tank.level < 90" [class.low]="tank.level < 40">
-              {{ tank.statusLabel }}
-            </span>
-          </div>
-          <p class="tank-location">{{ tank.location }} · {{ tank.capacity_liters }}L</p>
-          <div class="progress-container">
-            <div class="progress-bar">
-              <div class="progress-fill" [class.full]="tank.level >= 90" [class.normal]="tank.level >= 40 && tank.level < 90" [class.low]="tank.level < 40" [style.width.%]="tank.level"></div>
-            </div>
-            <span class="progress-percent">{{ tank.level }}%</span>
-          </div>
-          <p class="tank-volume">{{ tank.currentVolume }}L / {{ tank.capacity_liters }}L</p>
+  <div class="tank-card" *ngFor="let tank of tanks">
+    <div class="tank-info">
+      <div class="tank-icon" [class.full]="tank.level >= 90" [class.normal]="tank.level >= 40 && tank.level < 90" [class.low]="tank.level < 40"></div>
+      <div class="tank-details">
+        <div class="tank-name-row">
+          <h4>{{ tank.name }}</h4>
+          <span class="tank-status" [class.full]="tank.level >= 90" [class.normal]="tank.level >= 40 && tank.level < 90" [class.low]="tank.level < 40">
+            {{ tank.statusLabel }}
+          </span>
         </div>
-      </div>
-      <div class="tank-actions">
-        <button class="action-btn fill">▲ Llenar</button>
-        <button class="action-btn consume">▼ Consumir</button>
-        <button class="action-btn delete" (click)="confirmDelete(tank)">🗑️</button>
+        <p class="tank-location">{{ tank.location }} · {{ tank.capacity_liters }}L</p>
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill" [class.full]="tank.level >= 90" [class.normal]="tank.level >= 40 && tank.level < 90" [class.low]="tank.level < 40" [style.width.%]="tank.level"></div>
+          </div>
+          <span class="progress-percent">{{ tank.level }}%</span>
+        </div>
+        <p class="tank-volume">{{ tank.currentVolume }}L / {{ tank.capacity_liters }}L</p>
       </div>
     </div>
+    <div class="tank-actions">
+      <button class="action-btn fill">▲ Llenar</button>
+      <button class="action-btn consume">▼ Consumir</button>
+      <button class="action-btn delete" (click)="confirmDelete(tank)">🗑️</button>
+    </div>
+  </div>
 
-    <div class="empty-state" *ngIf="tanks.length === 0">
-      <p>No tienes tanques registrados</p>
-      <button class="add-btn-large" (click)="addTank()">+ Agregar tu primer tanque</button>
-    </div>
+  <div class="empty-state" *ngIf="tanks.length === 0">
+    <p>No tienes tanques registrados</p>
+    <button class="add-btn-large" (click)="addTank()">+ Agregar tu primer tanque</button>
   </div>
 
   <div class="modal-overlay" *ngIf="showDeleteModal" (click)="cancelDelete()">
@@ -92,4 +92,5 @@
       </div>
     </div>
   </div>
+
 </div>
